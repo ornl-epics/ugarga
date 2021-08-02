@@ -1,0 +1,17 @@
+file UGARGA.template
+{
+pattern {S, TA, DN1, DN2}
+        {SECAGE, SE, UGA, RGA}
+}
+file save_restoreStatus.db
+{
+pattern {P}
+        {SE:CS:UGARGA:}
+}
+
+file ioc_sns.db
+{
+pattern {IOCNAME}
+        {SE:CS:UGARGA}
+}
+

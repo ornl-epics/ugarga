@@ -1,0 +1,5 @@
+file UGARGA.template
+{
+pattern {S, TA, DN1, DN2}
+        {SECAGE, SE, UGA, RGA}
+}

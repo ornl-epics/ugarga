@@ -1,0 +1,282 @@
+##################################################
+# General Settings
+##################################################
+
+Terminator = CR;
+ReplyTimeout = 1000;
+locktimeout = 5000;
+readtimeout  = 1000;
+extrainput   = Ignore;
+
+#UGA commands start with Z
+#RGA commands 
+
+###################################################
+#Log IN to UGARGA
+###################################################
+#Set user name
+
+PutUserName {
+	out "SRSUGA"; 
+
+}
+
+PutPassword {
+	out "SRSUGA";
+	in "%*[Password:\_]";
+}
+
+
+GetID {
+	out "ZQID?";
+	in "%s";
+}
+
+##################################################
+GetSystemMode	{
+        out "ZMOD?";
+        in "%i";
+
+}
+
+
+
+GetBypassPumpMode   {
+        out "ZCBP?";
+        in "%i";
+}
+
+
+#############################################################
+#Turbo 
+#############################################################
+GetUGATurboSpeed   {
+	out "ZQHZ?";
+	in   "%f"
+}
+
+GetUGATurboCurrent   {
+        out "ZQCU?";
+        in   "%i"
+}
+
+###########################################################
+#State bits contain many states of the UGA
+##########################################################
+
+GetStatesBits	{
+	out "ZBST?";
+	in "%i";
+}
+
+###########################################################
+# Get automatic Vent Valve
+###########################################################
+
+GetAutoVentValve   {
+        out "ZPAV?";
+        in "%i";
+}
+
+###########################################################
+# Get Auto Sample Valve
+###########################################################
+
+GetAutoSampleValve   {
+        out "ZPAS?";
+        in "%i";
+}
+
+##########################################################
+
+
+
+###################################################
+#Get errors
+###################################################
+
+GetErrorInt	{
+	out "ZERR?";
+	in "%i";
+}
+
+GetErrorStr	{
+ 	 out "ZEDS?\$1" ;     #sending integer for speed four characters pad with 0
+ 	 in  "%s";
+}
+
+
+GetPressures	{
+         out "ZQAD?\$1" ;     #Pirani 0 utorr, CM utorr, IG ptorr
+         in  "%i";
+
+}
+
+
+GetTemperatures    {
+         out "ZPTH?\$1" ;     #0 elbow, 1 chamber, 2 sample line, 3 capillary
+         in  "%i";
+
+}
+
+GetTurboTemp    {
+         out "ZQTT?" ;        #turbo pump temperature 
+         in  "%i";
+
+}
+
+GetElbowTemp    {
+         out "ZQTA?" ;        #turbo pump temperature
+         in  "%i";
+
+}
+GetChamberTemp    {
+         out "ZQTB?" ;        #turbo pump temperature
+         in  "%i";
+
+}
+GetSampleLineTemp    {
+         out "ZQTC?" ;        #turbo pump temperature
+         in  "%i";
+
+}
+
+GetCapillaryTemp    {
+         out "ZQTD?" ;        #turbo pump temperature
+         in  "%i";
+
+}
+
+
+
+
+
+
+###################################################
+# Set functions UGA
+###################################################
+
+StartStopUGA {
+       out "%{ZMST|ZMSP}"; 
+}
+
+SetSampleValve    {
+         out "ZCSV%i" ;     
+
+}
+
+SetBypassValve    { 
+         out "ZCBV%i" ;      
+    
+}   
+
+
+SetBypassPump    {
+         out "ZCBP%i" ;
+
+}
+
+SetRoughingPump  {
+         out "ZCRP%i" ;
+}
+
+
+
+SetTurboPump  {
+         out "ZCTP%i" ;
+}
+
+SetRGA  {
+         out "ZCRG%i" ;
+}
+
+SetIonGauge  {
+         out "ZCIG%i" ;
+}
+
+SetAutoVent  {
+         out "ZCVV%i" ;
+}
+
+
+SetAutoSample  {
+         out "ZPAS%i" ;
+}
+
+
+
+
+
+#####################################################################################
+#RGA
+#####################################################################################
+
+GetRGAID   {
+        out "ID?";
+        in "%s";
+
+}
+
+
+#Query RGA Status Byte No errors 0
+
+GetStatusByte  {
+	out "ER?";
+	in "%i";
+}
+
+#Query Power Supply Error State
+GetPSErrorState {
+	out "EP?";
+	in "%i";
+}
+
+#Query Electrometer error State
+GetElectrometerErrorState {
+        out "ED?";
+        in "%i";
+}
+
+#Query Quadropole Mass fileter State
+GetQuadropoleMFErrorState {
+        out "EQ?";
+        in "%i";
+}
+
+
+#Query Electrom Multiplier Error State
+GetEMErrorState   {
+        out "EM?";
+        in "%i";
+
+}
+
+#Query Filament Error State
+GetFMNTErrorState {
+        out "EF?";
+        in "%i";
+
+}
+
+
+
+#Initialization the RGA and check RGA hardware
+SetInitRGA {
+        out "IN0";
+        in "%i";		#Returns status byte
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

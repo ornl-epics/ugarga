@@ -1,0 +1,565 @@
+record(stringout, "$(S):$(TA):$(DN1):UserName") {
+  info(DESC, "User Name")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(OUT, "@UGARGA.proto PutUserName UGARGA1")
+  field(SCAN, "Passive")
+  field(FLNK, "$(S):$(TA):$(DN1):Password")
+  field(PINI, "YES")	
+}
+
+
+
+
+
+record(stringout, "$(S):$(TA):$(DN1):Password") {
+  info(DESC, "Set Password")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(OUT, "@UGARGA.proto PutPassword UGARGA1")
+  field(SCAN, "Passive")
+}
+
+
+
+
+record(stringin, "$(S):$(TA):$(DN1):ID") {
+  info(DESC, "Get ID")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetID UGARGA1")
+  field(SCAN, "10 second")
+}
+
+record(mbbi, "$(S):$(TA):$(DN1):Mode")
+{
+   field(DESC, "UGA Mode")
+   field(ZRVL, "1")
+   field(ONVL, "3")
+   field(TWVL, "4")
+   field(THVL, "6")
+   field(FRVL, "7")
+   field(FVVL, "8")
+   field(SXVL, "10")
+   field(SVVL, "12")
+   field(EIVL, "13")	
+   field(ZRST, "OFF")
+   field(ONST, "START")
+   field(TWST, "STOP")
+   field(THST, "READY")
+   field(FRST, "SLEEP")
+   field(FVST, "IDLE")
+   field(SXST, "LEAKTEST")
+   field(SVST, "BRAKE")
+   field(EIST, "MANUAL")
+   info(archive, "Monitor, 00:00:01, VAL")
+   field(INP, "@UGARGA.proto GetSystemMode UGARGA1")
+   field(SCAN, "10 second")	
+   field(DTYP, "stream")
+}
+
+
+record(mbbi, "$(S):$(TA):$(DN1):BypassPumpMode")
+{
+   field(DESC, "Bypass Pump Mode")
+   field(ZRVL, "0")
+   field(ONVL, "1")
+   field(TWVL, "3")
+   field(THVL, "4")
+   field(FRVL, "6")
+   field(FVVL, "7")
+   field(ZRST, "OFF")
+   field(ONST, "ON")
+   field(TWST, "TURNING ON")
+   field(THST, "TURNING ON")
+   field(FRST, "TURNING OFF")
+   field(FVST, "TURNING OFF")
+   info(archive, "Monitor, 00:00:01, VAL")
+   field(INP, "@UGARGA.proto GetBypassPumpMode UGARGA1")
+   field(SCAN, "10 second")
+   field(DTYP, "stream")
+}
+
+
+record(bo, "$(S):$(TA):$(DN1):StartStop")
+{
+   field(DESC, "Start Stop UGA")
+   field(DTYP, "stream")
+   field(OUT,  "@UGARGA.proto StartStopUGA UGARGA1")
+   field(ZNAM, "Start")
+   field(ONAM, "Stop")
+   field(VAL,  "0")
+   info(autosaveFields, "VAL")
+}
+
+
+record(ai, "$(S):$(TA):$(DN1):TurboSpeed") {
+  field(DESC, "Read UGA turbo speed")
+  field(EGU, "RPM")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetUGATurboSpeed UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(ai, "$(S):$(TA):$(DN1):TurboCurrent") {
+  field(DESC, "Read UGA Turbo Current")
+  field(EGU, "mA")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetUGATurboCurrent UGARGA1")
+  field(SCAN, "1 second")
+}
+
+
+
+
+########################################################
+record(mbbiDirect, "$(S):$(TA):$(DN1):States")
+{
+   field(DESC, "UGA Component States")
+   info(archive, "Monitor, 00:00:01, VAL") 
+   field(INP, "@UGARGA.proto GetStatesBits UGARGA1")
+   field(SCAN, "1 second")
+   field(DTYP, "stream")
+   field(NOBT, "16")	
+}
+
+
+
+record(bi, "$(S):$(TA):$(DN1):BPState")
+{
+   field(DESC, "UGA Bypass Pump State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B0 CPP MS")
+   field(ZNAM, "BP is OFF")
+   field(ONAM, "BP is ON")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+record(bi, "$(S):$(TA):$(DN1):RPState")
+{
+   field(DESC, "UGA Roughing Pump State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B1 CPP MS")
+   field(ZNAM, "RP ios OFF")
+   field(ONAM, "RP is ON")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):RPIdleState")
+{
+   field(DESC, "UGA Roughing Pump Idle State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B2 CPP MS")
+   field(ZNAM, "")
+   field(ONAM, "RP is Idle")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):TPState")
+{
+   field(DESC, "UGA Turbo Pump State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B3 CPP MS")
+   field(ZNAM, "TP is OFF")
+   field(ONAM, "TP is ON")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):TPIdleState")
+{
+   field(DESC, "UGA Turbo Pump Idle State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B4 CPP MS")
+   field(ZNAM, "")
+   field(ONAM, "TP is Idle")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):BVState")
+{
+   field(DESC, "UGA Bypass Valve State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B5 CPP MS")
+   field(ZNAM, "BP is Closed")
+   field(ONAM, "BP is OPEN")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bi, "$(S):$(TA):$(DN1):SVState")
+{
+   field(DESC, "UGA Sample Valve State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B6 CPP MS")
+   field(ZNAM, "SV is Closed")
+   field(ONAM, "SV is Open")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bi, "$(S):$(TA):$(DN1):RGAState")
+{
+   field(DESC, "UGA RGA State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B7 CPP MS")
+   field(ZNAM, "RGA is Inactive")
+   field(ONAM, "RGA is Active")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bi, "$(S):$(TA):$(DN1):IGState")
+{
+   field(DESC, "UGA Ion Gauge State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B8 CPP MS")
+   field(ZNAM, "IG is Inactive")
+   field(ONAM, "IG is Active")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bi, "$(S):$(TA):$(DN1):VVState")
+{
+   field(DESC, "UGA Vent Valve State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.B9 CPP MS")
+   field(ZNAM, "VV is Closed")
+   field(ONAM, "VV is Open")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):HeaterState")
+{
+   field(DESC, "UGA Heater State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.BA CPP MS")
+   field(ZNAM, "Heater is Inactive")
+   field(ONAM, "Heater is Active")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+record(bi, "$(S):$(TA):$(DN1):BakeState")
+{
+   field(DESC, "UGA Bake State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.BB CPP MS")
+   field(ZNAM, "Bake OFF")
+   field(ONAM, "Bake ON")
+   info(archive, "Monitor, 00:01:00")
+
+}
+
+record(bi, "$(S):$(TA):$(DN1):AutoState")
+{
+   field(DESC, "UGA Auto Mode State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.BD CPP MS")
+   field(ZNAM, "Auto Mode Off")
+   field(ONAM, "Auto Mode ON")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bi, "$(S):$(TA):$(DN1):PowerUPState")
+{
+   field(DESC, "UGA Power UP State")
+   field(DTYP, "Soft Channel")
+   field(INP,  "$(S):$(TA):$(DN1):States.BE CPP MS")
+   field(ZNAM, "Power UP Off")
+   field(ONAM, "Power UP ON")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bi, "$(S):$(TA):$(DN1):GlobalError")
+{
+   field(DESC, "UGA Global Error State")
+   field(DTYP, "Soft Channel")
+   field(INP, "$(S):$(TA):$(DN1):States.BF CPP MS")
+   field(ZNAM, "NO_ALARM")
+   field(ONAM, "MAJOR")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+#########################################################
+#Auto Vent Valve
+#########################################################
+
+record(bi, "$(S):$(TA):$(DN1):AutoVentValveState") {
+  field(DESC, "Get Auto Vent Valve State")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetAutoVentValve UGARGA1")
+  field(SCAN, "1 second")
+  field(ZNAM, "NO_ALARM")
+  field(ONAM, "MAJOR") 
+}
+
+#########################################################
+#Auto Sample Valve
+#########################################################
+
+record(bi, "$(S):$(TA):$(DN1):AutoSampleValveState") {
+  field(DESC, "Get Auto Sample Valve")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetAutoSampleValve UGARGA1")
+  field(SCAN, "1 second")
+  field(ZNAM, "NO_ALARM")
+  field(ONAM, "MAJOR")
+}
+
+
+
+#########################################################
+#Error handling
+#########################################################
+
+record(longin, "$(S):$(TA):$(DN1):ErrorInt") {
+  field(DESC, "Read Error Integer")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetErrorInt UGARGA1")
+  field(SCAN, "1 second")
+}
+
+
+
+
+#record(stringout, "$(S):$(TA):$(DN1):ErrorStrg") {
+#  info(DESC, "Get Error in string format")
+#  info(archive, "Monitor, 00:01:00")
+#  field(DTYP, "stream")
+#  field(OUT, "@UGARGA.proto GetErrorStr($($(S):$(TA):$(DN1):ErrorInt.RVAL)) UGARGA1")
+#  field(SCAN, "10 second")
+#}
+
+##################################################################
+#Pressures
+##################################################################
+record(longin, "$(S):$(TA):$(DN1):PiraniPres") {
+  field(DESC, "Read Pirani Gauge")
+  field(EGU, "uTorr")	
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetPressures(0) UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(S):$(TA):$(DN1):CMGaugePres") {
+  field(DESC, "Read Capacitor Manometer Gauge")
+  field(EGU, "uTorr")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetPressures(2) UGARGA1")
+  field(SCAN, "1 second")
+}
+
+
+
+record(longin, "$(S):$(TA):$(DN1):IonGaugePres") {
+  field(DESC, "Read Ion Gauge")
+  field(EGU, "pTorr")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetPressures(3) UGARGA1")
+  field(SCAN, "1 second")
+}
+
+################################################################
+#Temperatures
+################################################################
+
+record(longin, "$(S):$(TA):$(DN1):ElbowTemp") {
+  field(DESC, "Read Elbow Temperature")
+  field(EGU, "C")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetElbowTemp UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(S):$(TA):$(DN1):ChamberTemp") {
+  field(DESC, "Read Chamber Temperature")
+  field(EGU, "C")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetChamberTemp UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(S):$(TA):$(DN1):SampleLineTemp") {
+  field(DESC, "Read Sample Line Temperature")
+  field(EGU, "C")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetSampleLineTemp UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(S):$(TA):$(DN1):CapillaryTemp") {
+  field(DESC, "Read the Capillary Temp")
+  field(EGU, "C")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetCapillaryTemp UGARGA1")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(S):$(TA):$(DN1):TurboTemp") {
+  field(DESC, "Read Turbo Temperature")
+  field(EGU, "C")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetTurboTemp UGARGA1")
+  field(SCAN, "1 second")
+}
+###############################################################
+#Set 
+###############################################################
+
+record(bo, "$(S):$(TA):$(DN1):SetSampleValve")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set Saample Valve") 	
+   field(OUT,  "@UGARGA.proto SetSampleValve UGARGA1")
+   field(ZNAM, "Closed")
+   field(ONAM, "Open")
+   field(VAL,  "0")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bo, "$(S):$(TA):$(DN1):SetBypassValve")
+{  
+   field(DTYP, "stream")
+   field(DESC, "Set Bypass Valve")     
+   field(OUT,  "@UGARGA.proto SetBypassValve UGARGA1")
+   field(ZNAM, "Closed")
+   field(ONAM, "Open")
+   field(VAL,  "0")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+record(bo, "$(S):$(TA):$(DN1):SetBypassPump")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set Bypass Pump")
+   field(OUT,  "@UGARGA.proto SetBypassPump UGARGA1")
+   field(ZNAM, "OFF")
+   field(ONAM, "ON")
+   field(VAL,  "0")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(mbbo, "$(S):$(TA):$(DN1):SetRoughingPump")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set Roughing Pump")
+   field(OUT,  "@UGARGA.proto SetRoughingPump UGARGA1")
+   field(ZRVL, "0")
+   field(ONVL, "1")
+   field(TWVL, "2")
+   field(ZRST, "OFF")
+   field(ONST, "ON")
+   field(TWST, "IDLE")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+
+
+record(mbbo, "$(S):$(TA):$(DN1):SetTurboPump")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set turbo Pump")
+   field(OUT,  "@UGARGA.proto SetTurboPump UGARGA1")
+   field(ZRVL, "0")
+   field(ONVL, "1")
+   field(TWVL, "2")
+   field(ZRST, "OFF")
+   field(ONST, "ON")
+   field(TWST, "IDLE")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bo, "$(S):$(TA):$(DN1):SetRGAONOFF")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set RGA ON OFF")     
+   field(OUT,  "@UGARGA.proto SetRGA UGARGA1")
+   field(ZNAM, "OFF")
+   field(ONAM, "ON")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(mbbo, "$(S):$(TA):$(DN1):SetIonGauge")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set ION Gauge OFF, ON, DEGAS")
+   field(OUT,  "@UGARGA.proto SetTurboPump UGARGA1")
+   field(ZRVL, "0")
+   field(ONVL, "1")
+   field(TWVL, "2")
+   field(ZRST, "OFF")
+   field(ONST, "ON")
+   field(TWST, "DEGAS")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bo, "$(S):$(TA):$(DN1):SetAutoVent")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set AUTO Vent ON OFF")
+   field(OUT,  "@UGARGA.proto SetAutoVent UGARGA1")
+   field(ZNAM, "OFF")
+   field(ONAM, "ON")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+record(bo, "$(S):$(TA):$(DN1):SetAutoSample")
+{
+   field(DTYP, "stream")
+   field(DESC, "Set AUTO sample Valve ON OFF")
+   field(OUT,  "@UGARGA.proto SetAutoSample UGARGA1")
+   field(ZNAM, "OFF")
+   field(ONAM, "ON")
+   info(autosaveFields, "VAL")
+   info(archive, "Monitor, 00:01:00")
+}
+
+
+
+##################################################
+###### RGA #######################################
+##################################################
+
+record(stringin, "$(S):$(TA):$(DN2):ID") {
+  info(DESC, "Get RGA ID")
+  info(archive, "Monitor, 00:01:00")
+  field(DTYP, "stream")
+  field(INP, "@UGARGA.proto GetRGAID UGARGA1")
+  field(SCAN, "10 second")
+}
+
